@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha de Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('./imagem_de_fundo.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .profile-option {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .profile-option img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Escolha o Perfil para Continuar</h1>
+
+        <div class="profile-option">
+            <img src="./animais.jfif" alt="Animal">
+            <button data-url="/cadastroAnimal.html">Animal</button>
+        </div>
+
+        <div class="profile-option">
+            <img src="./idosos.jfif" alt="Pessoa">
+            <button data-url="/cadastroPessoa.html">Pessoa</button>
+        </div>
+
+        <div class="profile-option">
+            <img src="./mala.jfif" alt="Objeto">
+            <button data-url="/cadastroObjeto.html">Objeto</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const qrcodeId = params.get('qrcodeId');
+
+            document.querySelectorAll('button').forEach(button => {
+                button.onclick = function() {
+                    const perfilUrl = this.getAttribute('data-url');
+                    window.location.href = perfilUrl + '?qrcodeId=' + qrcodeId;
+                };
+            });
+        });
+    </script>
+</body>
+</html>

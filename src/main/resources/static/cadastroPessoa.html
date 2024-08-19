@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Pessoa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('./imagem_de_fundo.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastro de Pessoa</h2>
+        <form id="cadastroPessoaForm">
+            <div class="form-group">
+                <label for="nomeResponsavel">Nome do Responsável:</label>
+                <input type="text" id="nomeResponsavel" name="nomeResponsavel" required>
+            </div>
+            <div class="form-group">
+                <label for="enderecoResponsavel">Endereço do Responsável:</label>
+                <input type="text" id="enderecoResponsavel" name="enderecoResponsavel" required>
+            </div>
+            <div class="form-group">
+                <label for="telefoneResponsavel">Telefone do Responsável:</label>
+                <input type="text" id="telefoneResponsavel" name="telefoneResponsavel" required>
+            </div>
+            <div class="form-group">
+                <label for="emailResponsavel">Email do Responsável:</label>
+                <input type="email" id="emailResponsavel" name="emailResponsavel" required>
+            </div>
+            <div class="form-group">
+                <label for="nomePessoa">Nome da Pessoa:</label>
+                <input type="text" id="nomePessoa" name="nomePessoa" required>
+            </div>
+            <div class="form-group">
+                <label for="patologiaPessoa">Patologia:</label>
+                <input type="text" id="patologiaPessoa" name="patologiaPessoa">
+            </div>
+            <div class="form-group">
+                <label for="medicacaoPessoa">Medicação:</label>
+                <input type="text" id="medicacaoPessoa" name="medicacaoPessoa">
+            </div>
+            <div class="form-group">
+                <label for="tipoSanguineoPessoa">Tipo Sanguíneo:</label>
+                <input type="text" id="tipoSanguineoPessoa" name="tipoSanguineoPessoa">
+            </div>
+            <div class="form-group">
+                <label for="observacaoPessoa">Observação:</label>
+                <input type="text" id="observacaoPessoa" name="observacaoPessoa">
+            </div>
+            <input type="submit" value="Cadastrar Pessoa">
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const qrcodeId = params.get('qrcodeId');
+
+            document.getElementById('cadastroPessoaForm').onsubmit = function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const pessoaData = Object.fromEntries(formData);
+                pessoaData.fotoPessoa = "link para foto";  // Define um link fixo para a foto
+
+                fetch(`/api/pessoas/cadastrar/${qrcodeId}`, {
+                    method: 'POST',
+                    body: JSON.stringify(pessoaData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Erro ao cadastrar pessoa.');
+                    }
+                }).then(message => {
+                    alert(message);
+                    window.location.href = '/home.html'; // Redireciona para a tela de sucesso
+                }).catch(error => {
+                    alert(error.message);
+                });
+            };
+        });
+    </script>
+</body>
+</html>

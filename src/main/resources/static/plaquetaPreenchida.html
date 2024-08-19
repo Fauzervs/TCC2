@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plaqueta Preenchida</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('./background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Plaqueta Preenchida</h2>
+        <p>Esta plaqueta já foi preenchida.</p>
+        <div class="details" id="qrcodeDetails">
+            <!-- Detalhes do QRCode aparecerão aqui -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const qrcodeId = params.get('qrcodeId');
+
+            // Faz uma requisição para buscar os dados do QRCode pelo ID
+            fetch(`/api/qrcodes/${qrcodeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const detailsDiv = document.getElementById('qrcodeDetails');
+                    detailsDiv.innerHTML = `
+                        <p><strong>ID do QRCode:</strong> ${data.id}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                        <p><strong>Apelido:</strong> ${data.apelido || 'Não definido'}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar os dados do QRCode:', error);
+                });
+        });
+    </script>
+</body>
+</html>

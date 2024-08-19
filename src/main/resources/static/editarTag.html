@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tag</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('imagem_de_fundo.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editar Tag</h2>
+        <form id="editarTagForm">
+            <div class="form-group">
+                <label for="nomeTag">Nome da Tag:</label>
+                <input type="text" id="nomeTag" name="nomeTag" required>
+            </div>
+            <!-- Outros campos para edição -->
+            <input type="submit" value="Salvar Alterações">
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const tagId = params.get('tagId');
+
+            // Fetch dados da tag do servidor para pré-preencher o formulário
+            fetch(`/api/tags/${tagId}`)
+                .then(response => response.json())
+                .then(tag => {
+                    document.getElementById('nomeTag').value = tag.nome;
+                    // Preencher outros campos aqui
+                });
+
+            document.getElementById('editarTagForm').onsubmit = function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const tagData = Object.fromEntries(formData);
+
+                fetch(`/api/tags/${tagId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(tagData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/painelControle.html'; // Redireciona de volta para o painel de controle
+                    } else {
+                        throw new Error('Erro ao atualizar tag.');
+                    }
+                }).catch(error => {
+                    alert(error.message);
+                });
+            };
+        });
+    </script>
+</body>
+</html>
